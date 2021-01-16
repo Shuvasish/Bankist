@@ -190,6 +190,24 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const user = inputCloseUsername.value;
+  const pin = Number(inputClosePin.value);
+  inputCloseUsername.value = inputClosePin.value = '';
+  if (user === currentAccount.userName && pin === currentAccount.pin) {
+    console.log('deleted');
+    const index = accounts.findIndex(
+      acc => acc.userName === currentAccount.userName
+    );
+    console.log(index);
+    accounts.splice(index, 1);
+    //hiding ui
+    containerApp.style.opacity = 0;
+  }
+});
+
 // const deposits = movements.filter(mov => mov > 0);
 // const withdrawals = movements.filter(mov => mov < 0);
 // console.log(movements);
