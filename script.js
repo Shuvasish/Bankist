@@ -79,9 +79,10 @@ const currencies = new Map([
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
     <div class="movements__row">
@@ -218,6 +219,12 @@ btnClose.addEventListener('click', function (e) {
     containerApp.style.opacity = 0;
   }
 });
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
 
 // const deposits = movements.filter(mov => mov > 0);
 // const withdrawals = movements.filter(mov => mov < 0);
@@ -311,3 +318,30 @@ btnClose.addEventListener('click', function (e) {
 //   }
 // };
 // console.log(acc(accounts));
+// const arr = [[2, 3, 4], [2, 3], 4, 5];
+// console.log(arr.flat());
+// const allbal = accounts
+//   .map(acc => acc.movements)
+//   .flat()
+//   .reduce((mov, cur) => mov + cur, 0);
+// console.log(allbal);
+// const arr2 = [[2, 3], [1, 2], 2];
+// console.log(arr2.flatMap(a => a));
+
+// const arr = ['shuvo', 'dipu', 'topu'];
+// const arr2 = [1, 4, 3, 1, 2];
+// console.log(arr.sort());
+// console.log(arr2.map(a => a).sort(1));
+// console.log(arr, arr2);
+// console.log(movements.sort());
+
+// arr2.sort((a, b) => {
+//   console.log(a, b);
+//   return b - a;
+// });
+
+// console.log(arr2);
+
+// const arr = ['32', '222', '52', '0', '-33', '-555', 3];
+// arr.sort((a, b) => a - b);
+// console.log(...arr);
