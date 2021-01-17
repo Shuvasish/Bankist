@@ -10,6 +10,19 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+
+  movementsDates: [
+    '2019-11-18T21:31:17.178Z',
+    '2019-12-23T07:42:02.383Z',
+    '2020-01-28T09:15:04.904Z',
+    '2020-04-01T10:17:24.185Z',
+    '2020-05-08T14:11:59.604Z',
+    '2020-05-27T17:01:17.194Z',
+    '2020-07-11T23:36:17.929Z',
+    '2020-07-12T10:51:36.790Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT', // de-DE
 };
 
 const account2 = {
@@ -17,6 +30,18 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
 const account3 = {
@@ -24,6 +49,18 @@ const account3 = {
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
 const account4 = {
@@ -31,12 +68,36 @@ const account4 = {
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 const account5 = {
   owner: 'Shuvasish Talukder Shuvo',
   movements: [14000, -2000, -4500, 700, 50, 90],
   interestRate: 1.4,
   pin: 5555,
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
 const accounts = [account1, account2, account3, account4, account5];
@@ -152,7 +213,7 @@ btnLogin.addEventListener('click', function (e) {
     acc => acc.userName === inputLoginUsername.value
   );
 
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+  if (currentAccount?.pin === +inputLoginPin.value) {
     containerApp.style.opacity = 1;
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
@@ -169,7 +230,7 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
   const receiveAcc = accounts.find(
     acc => acc.userName === inputTransferTo.value
   );
@@ -181,7 +242,7 @@ btnTransfer.addEventListener('click', function (e) {
     receiveAcc?.userName !== currentAccount.userName
   ) {
     //doing the transfer of money
-    console.log(amount, receiveAcc);
+    // console.log(amount, receiveAcc);
     currentAccount.movements.push(-amount);
     //update user interface
     receiveAcc.movements.push(amount);
@@ -193,9 +254,9 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    console.log('granted');
+    // console.log('granted');
     currentAccount.movements.push(amount);
     updateUI(currentAccount);
   }
@@ -206,7 +267,7 @@ btnClose.addEventListener('click', function (e) {
   e.preventDefault();
 
   const user = inputCloseUsername.value;
-  const pin = Number(inputClosePin.value);
+  const pin = +inputClosePin.value;
   inputCloseUsername.value = inputClosePin.value = '';
   if (user === currentAccount.userName && pin === currentAccount.pin) {
     console.log('deleted');
@@ -345,3 +406,96 @@ btnSort.addEventListener('click', function (e) {
 // const arr = ['32', '222', '52', '0', '-33', '-555', 3];
 // arr.sort((a, b) => a - b);
 // console.log(...arr);
+// const x = new Array(7, 3);
+// console.log(x);
+// const diceRoll = Array.from({ length: 200 }, (_, i) =>
+//   Math.floor(Math.random() * 6 + 1)
+// );
+// console.log(...diceRoll);
+
+// labelBalance.addEventListener('click', function () {
+//   const movUI = Array.from(document.querySelectorAll('.movements__value'), el =>
+//     Number(el.textContent.replace('€', ''))
+//   );
+//   console.log(movUI.reduce((acc, cur) => acc + cur));
+// });
+// const dogs = [
+//   { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+//   { weight: 8, curFood: 200, owners: ['Matilda'] },
+//   { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+//   { weight: 32, curFood: 340, owners: ['Michael'] },
+// ];
+// //chal-1
+// dogs.forEach(function (dog) {
+//   // console.log(dog);
+//   dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28);
+//   // console.log(dog.recommendedFood);
+// });
+// //chal-2
+// const sarah = dogs.find(dog => {
+//   // console.log(dog.owners);
+//   return dog.owners.includes('Sarah');
+// });
+// const footCalc = function (obj) {
+//   if (obj.curFood > obj.recommendedFood * 0.9) {
+//     console.log('it is eating to much');
+//   } else if (obj.curFood < obj.recommendedFood * 1.1) {
+//     console.log('it is eating to little');
+//   } else {
+//     console.log('its under control');
+//   }
+// };
+// footCalc(sarah);
+
+// console.log(sarah);
+// // chal-3
+// const ownerEatTooMuch = dogs.filter(
+//   dog => dog.recommendedFood + dog.recommendedFood * 0.1 < dog.curFood
+// );
+// const ownerEatTooLittle = dogs.filter(
+//   dog => dog.recommendedFood - dog.recommendedFood * 0.1 > dog.curFood
+// );
+// console.log(ownerEatTooMuch);
+// console.log(ownerEatTooLittle);
+// //chal-4
+
+// const displaySumMuch = function (obj) {
+//   const temp2 = obj
+//     .map(arr => {
+//       return arr.owners;
+//     })
+//     .flat();
+//   console.log(`${temp2.join(' and ')}'s dog eat too much`);
+// };
+// displaySumMuch(ownerEatTooMuch);
+// const displaySumLittle = function (obj) {
+//   const temp2 = obj
+//     .map(arr => {
+//       return arr.owners;
+//     })
+//     .flat();
+//   console.log(`${temp2.join(' and ')}'s dog eat too Little`);
+// };
+// displaySumLittle(ownerEatTooLittle);
+
+// //chal-5
+// console.log(dogs.some(dog => dog.recommendedFood === dog.curFood));
+// //chal-6
+// const dl = function (doi) {
+//   return (
+//     doi.curFood > doi.recommendedFood * 0.9 &&
+//     doi.curFood < doi.recommendedFood * 1.1
+//   );
+// };
+// console.log(dogs.some(dl));
+
+// //chal-7
+// console.log(dogs.filter(dl));
+// const sorteded = dogs.slice().sort((a, b) => {
+//   return a.recommendedFood - b.recommendedFood;
+// });
+// console.log(dogs);
+// console.log(sorteded);
+// a = {name : 'shuvo',
+//   phone: 199989}
+console.log(0.1 + 0.2);
