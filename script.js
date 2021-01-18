@@ -96,8 +96,8 @@ const account5 = {
     '2021-01-17T18:49:59.371Z',
     '2021-01-18T12:01:20.894Z',
   ],
-  currency: 'USD',
-  locale: 'en-US',
+  currency: 'BDT',
+  locale: 'bn-bd',
 };
 
 const accounts = [account1, account2, account3, account4, account5];
@@ -139,7 +139,7 @@ const currencies = new Map([
 ]);
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-const formatMovmentdate = function (date) {
+const formatMovmentdate = function (date, local) {
   const calcDaysPassed = function (date1, date2) {
     return Math.round(Math.abs(date1 - date2) / (1000 * 60 * 60 * 24));
   };
@@ -148,14 +148,16 @@ const formatMovmentdate = function (date) {
 
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`;
-  else {
-    // console.log(daysPassed);
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
 
-    return `${day}/${month}/${year}`;
-  }
+  return new Intl.DateTimeFormat(local).format(date);
+  // else {
+  //   // console.log(daysPassed);
+  //   // const day = `${date.getDate()}`.padStart(2, 0);
+  //   // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  //   // const year = date.getFullYear();
+
+  //   // return `${day}/${month}/${year}`;
+  // }
 };
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -166,7 +168,7 @@ const displayMovements = function (acc, sort = false) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const date = new Date(acc.movementsDates[i]);
     // console.log(date);
-    const displayDate = formatMovmentdate(date);
+    const displayDate = formatMovmentdate(date, acc.locale);
     const html = `
     <div class="movements__row">
       <div class="movements__type movements__type--${type}">${
@@ -229,6 +231,7 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 //event listender
+//experment
 
 //fake login
 let currentAccount;
@@ -253,15 +256,27 @@ btnLogin.addEventListener('click', function (e) {
     // inputLoginUsername.focus();
     //displaying movments
     const now = new Date();
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, 0);
-    const year = now.getFullYear();
-    const hour = `${now.getHours() % 12}`.padStart(2, 0);
-    const min = `${now.getMinutes()}`.padStart(2, 0);
-    const aMpM = now.getHours() > 12 ? 'PM' : 'AM';
+    const option = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      // weekday: 'long',
+    };
+    const locale = Navigator.language;
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      option
+    ).format(now);
+    // containerApp.style.opacity = 1;
+    //     const day = `${now.getDate()}`.padStart(2, 0);
+    //     const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    //     const year = now.getFullYear();
+    //     const hour = `${now.getHours() % 12}`.padStart(2, 0);
+    //     const min = `${now.getMinutes()}`.padStart(2, 0);
+    //     const aMpM = now.getHours() > 12 ? 'PM' : 'AM';
     // console.log(now.getHours());
-
-    labelDate.textContent = `${day}/${month}/${year} ${hour}:${min} ${aMpM}`;
 
     updateUI(currentAccount);
   }
