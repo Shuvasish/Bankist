@@ -159,6 +159,15 @@ const formatMovmentdate = function (date, local) {
   //   // return `${day}/${month}/${year}`;
   // }
 };
+
+// ------------------
+const formatNum = function (mov, cur) {
+  const options = {
+    style: 'currency',
+    currency: cur.currency,
+  };
+  return new Intl.NumberFormat(cur.locale, options).format(mov);
+};
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
   const movs = sort
@@ -175,28 +184,53 @@ const displayMovements = function (acc, sort = false) {
       i + 1
     } ${type}</div>
       <div class="movements__date">${displayDate}</div>
-      <div class="movements__value">${mov.toFixed(2)}€</div>
+      <div class="movements__value">${formatNum(mov, currentAccount)}</div>
     </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
     // console.log(html);
   });
 };
 
+// ------------------
+
+// const displayMovements = function (acc, sort = false) {
+//   containerMovements.innerHTML = '';
+//   const movs = sort
+//     ? acc.movements.slice().sort((a, b) => a - b)
+//     : acc.movements;
+//   movs.forEach(function (mov, i) {
+//     const type = mov > 0 ? 'deposit' : 'withdrawal';
+//     const date = new Date(acc.movementsDates[i]);
+//     // console.log(date);
+//     const displayDate = formatMovmentdate(date, acc.locale);
+//     const html = `
+//     <div class="movements__row">
+//       <div class="movements__type movements__type--${type}">${
+//       i + 1
+//     } ${type}</div>
+//       <div class="movements__date">${displayDate}</div>
+//       <div class="movements__value">${mov.toFixed(2)}€</div>
+//     </div>`;
+//     containerMovements.insertAdjacentHTML('afterbegin', html);
+//     // console.log(html);
+//   });
+// };
+
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  labelBalance.textContent = `${formatNum(acc.balance, acc)}`;
 };
 
 const calcDisplaySummary = acc => {
   const income = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${income.toFixed(2)}€`;
+  labelSumIn.textContent = `${formatNum(income, acc)}`;
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
 
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = `${formatNum(Math.abs(out), acc)}`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -204,7 +238,7 @@ const calcDisplaySummary = acc => {
     .filter(int => int >= 1)
     .reduce((acc, int) => acc + int, 0);
 
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = `${formatNum(interest, acc)}`;
 };
 
 const createUsers = function (accs) {
@@ -602,3 +636,35 @@ btnSort.addEventListener('click', function (e) {
 //   return days;
 // };
 // dateCounter(new Date(2013, 2), new Date());
+
+// const isLeap = function (year) {
+//   // console.log(year + ' one level deep');
+//   if (year % 400 === 0 && year % 100 === 0) {
+//     console.log(year + ': is a leap year');
+//   } else if (year % 4 === 0 && year % 100 !== 0) {
+//     console.log(year + ': is a leap year');
+//   } else {
+//     console.log(year + ': is not a leap year');
+//   }
+
+//   return 0;
+// };
+
+// console.log(isLeap(2000));
+// console.log(isLeap(2020));
+// console.log(isLeap(2024));
+// console.log(isLeap(2028));
+// console.log(isLeap(2025));
+// console.log(isLeap(1700));
+// console.log(isLeap(1800));
+// console.log(isLeap(1900));
+// console.log(isLeap(1600));
+// console.log(isLeap(0));
+// const num = 32334643.23999;
+// const options = {
+//   style: 'currency',
+//   currency: 'bdt',
+// };
+// console.log(new Intl.NumberFormat('en-uk', options).format(num));
+// console.log(new Intl.NumberFormat('bn-bd', options).format(num));
+// console.log(new Intl.NumberFormat('de-de', options).format(num));
